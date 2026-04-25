@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoutEye - Your GPS Tracking Solution</title>
+    <link rel="icon" href="RoutEye Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --primary-green:#28a745;
+            --light-green:#218838; 
+            --dark-background:#0D161F; /* Used for Menu/Footer/Shadows */
+            --section-background:#F9F9F9; 
+            --light-text:#333; /* Dark text for white background */
+            --white:#FFFFFF; 
+            --dark-text: #333;
+            --muted:rgba(0,0,0,0.1); 
+        }
+        
+        /* Keep smooth scrolling for all anchor links */
+        html {
+            scroll-behavior: smooth;
+        }
+        body{
+            font-family:'Open Sans',sans-serif;
+            margin:0;
+            /* MODIFICATION: Increased padding-top to account for fixed, slightly taller header */
+            padding-top:120px; 
+            /* CHANGE: Use white background */
+            background-color:var(--white); 
+            color:var(--dark-text);
+            line-height:1.6;
+            min-height:100vh;
+            -webkit-font-smoothing:antialiased
+        }
+        header{
+            /* CHANGE: White header */
+            background-color:var(--white); 
+            backdrop-filter:none;
+            /* MODIFICATION: Decreased vertical padding for a slimmer header area */
+            padding:0.3rem 2rem; 
+            position:fixed;
+            top:0;
+            width:100%;
+            z-index:1000;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 2px 10px rgba(0,0,0,0.1); /* Light shadow */
+            box-sizing:border-box
+        }
+        .header-logo{
+            /* DECREASED by 15% (120px - 15% = 102px) */
+            max-height:102px; 
+        }
+        .header-nav{
+            display:flex;
+            gap:8px; 
+            align-items:center
+        }
+        .header-nav a{
+            /* CHANGE: Dark text for header links */
+            color:var(--dark-text);
+            text-decoration:none;
+            font-weight:600;
+            padding:6px 8px; 
+            border-radius:6px;
+            font-size:0.85rem; 
+            white-space:nowrap; 
+            transition: background-color 0.2s, color 0.2s; /* Added transition for smooth hover */
+        }
+        /* >>> MODIFICATION: Highlight linked item when mouse pointer goes over */
+        .header-nav a:hover:not(.login-link) {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+        .login-link{
+            background:var(--primary-green);
+            color:var(--white); /* White text on green button */
+            padding:8px 14px;
+            border-radius:6px;
+            font-size:1rem; 
+        }
+        /* >>> MODIFICATION: Login link hover effect */
+        .login-link:hover {
+            background: var(--light-green); 
+            color: var(--white);
+        }
+
+        .container{
+            width:90%;
+            max-width:1100px;
+            margin:2.5rem auto;
+            /* CHANGE: White container background with light shadow */
+            background-color:var(--white);
+            padding:2.5rem;
+            box-shadow:0 0 15px rgba(0,0,0,0.1);
+            border-radius:12px;
+            backdrop-filter:none;
+            color: var(--dark-text); /* Ensure container content is dark */
+        }
+        .section-title{
+            font-family:'Montserrat',sans-serif;
+            color:var(--primary-green);
+            border-bottom:3px solid var(--primary-green);
+            padding-bottom:.6rem;
+            margin-bottom:2.2rem; 
+            text-align:center;
+            font-size:1.6rem; 
+            font-weight:700;
+        }
+        .device-item h3{
+            font-family:'Montserrat',sans-serif;
+            font-size:1.6rem;
+            color:var(--primary-green);
+            margin-bottom:12px;
+            text-align:center;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis
+        }
+        .service-list ul,.feature-list ul,.device-details-container ul{
+            list-style:none;
+            padding-left:0;
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+            gap:18px
+        }
+        .service-list li,.feature-list li,.device-details-container li{
+            /* CHANGE: Lighter background for list items */
+            background:#F0F0F0;
+            padding:14px 18px;
+            border-left:5px solid var(--primary-green);
+            border-radius:8px;
+            box-shadow:0 2px 6px rgba(0,0,0,0.1);
+            display:flex;
+            gap:12px;
+            align-items:center
+        }
+        .list-icon{
+            font-size:1.35rem;
+            color:var(--primary-green)
+        }
+        footer{
+            text-align:center;
+            padding:2rem 0;
+            /* CHANGE: Dark footer background for contrast */
+            background-color:var(--dark-background);
+            color:var(--white);
+            margin-top:2.5rem;
+            font-size:.95rem;
+            border-radius:8px
+        }
+        .hero-cta-buttons{
+            display:flex;
+            justify-content:center;
+            gap:16px;
+            margin-top:18px
+        }
+        .cta-button{
+            padding:10px 22px;
+            border-radius:6px;
+            font-weight:700;
+            text-decoration:none;
+            white-space:nowrap
+        }
+        .primary-cta{
+            background:var(--primary-green);
+            color:var(--white)
+        }
+        .secondary-cta{
+            background:#f1c40f;
+            color:var(--dark-background);
+            border:2px solid #f1c40f
+        }
+        .query-form,.mileage-calculator{
+            max-width:520px;
+            margin:0 auto;
+            padding:20px;
+            border-radius:10px;
+            /* CHANGE: Lighter form background */
+            background:var(--section-background);
+            box-shadow:0 6px 18px rgba(0,0,0,0.1);
+            border:1px solid var(--muted)
+        }
+        .query-form label,.mileage-calculator label{
+            font-weight:600;
+            display:block;
+            margin-bottom:6px;
+            color:var(--dark-text)
+        }
+        .query-form input[type="text"],
+        .query-form input[type="email"],
+        .query-form input[type="tel"],
+        .query-form select,
+        .query-form textarea,
+        .mileage-calculator input[type="number"],
+        .mileage-calculator select {
+            width:calc(100% - 20px);
+            padding:10px;
+            border-radius:8px;
+            border:1px solid var(--muted);
+            /* CHANGE: Light background for inputs */
+            background:var(--white);
+            color:var(--dark-text); 
+            font-weight:700; 
+            margin-bottom:12px;
+            font-size:.95rem;
+            cursor: pointer; 
+        }
+        .device-selector-wrapper{
+            display:flex;
+            justify-content:center;
+            margin-bottom:20px
+        }
+        .custom-select{
+            position:relative;
+            width:100%;
+            max-width:460px
+        }
+        #device-selector{
+            -webkit-appearance:none;
+            appearance:none;
+            width:100%;
+            padding:12px 44px 12px 16px;
+            border-radius:10px;
+            border:1px solid var(--muted);
+            /* CHANGE: Light background for selector */
+            background:var(--section-background);
+            color:var(--dark-text);
+            font-weight:700; 
+            font-size:1rem;
+            box-shadow:0 3px 10px rgba(0,0,0,0.05);
+        }
+        #device-selector option,
+        .query-form select option,
+        .mileage-calculator select option {
+            font-weight: 700;
+            color: var(--dark-text); 
+            background-color: var(--white);
+        }
+        /* Update the dropdown arrow color for dark text */
+        .custom-select::after{
+            background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="%23333333"><path d="M5.23 7.21a.75.75 0 011.06-.02L10 10.87l3.71-3.69a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.25 8.25a.75.75 0 01-.02-1.04z"/></svg>');
+            opacity:1;
+        }
+        .device-item{
+            display:none;
+            background:var(--section-background);
+            padding:22px;
+            border-radius:10px;
+            margin-top:14px;
+            box-shadow:0 4px 15px rgba(0,0,0,0.1)
+        }
+        .device-item.active{
+            display:block
+        }
+        
+        /* --- NEW STYLES FOR DEVICE IMAGES --- */
+        .device-image-wrapper {
+            text-align: center; /* Center the image */
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--muted); /* Separator line */
+        }
+        .device-image {
+            max-width: 80%; /* Ensure it's responsive but doesn't fill entire width */
+            max-height: 250px; /* Limit the height */
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            object-fit: contain; /* Ensure the image is fully visible */
+            background-color: var(--white); /* White background in case of transparent image or padding */
+            padding: 10px; /* Small padding inside the shadow box */
+        }
+        /* ------------------------------------- */
+
+        @media (max-width:700px){
+            .section-title{
+                font-size:1.4rem
+            }
+            #device-selector{
+                max-width:100%
+            }
+        }
+
+        .back-to-top{
+            position:fixed;
+            bottom:20px;
+            right:20px;
+            background:var(--light-green);
+            color:var(--white);
+            width:44px;
+            height:44px;
+            border-radius:50%;
+            display:none;
+            text-align:center;
+            line-height:44px;
+            font-size:1.25rem;
+            box-shadow:0 3px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        .app-links {
+            display: flex;
+            flex-direction: row; 
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap; 
+            gap: 20px;
+            margin-top: 15px;
+        }
+        /* REMOVED: query-form button[type="submit"] styles as it's replaced by 3D buttons */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; 
+            height: 0;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: var(--dark-background);
+        }
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border: 0;
+        }
+
+        /* STYLES for the autoscrolling story section (unchanged) */
+        .story-carousel-wrapper {
+            overflow: hidden; 
+            padding: 20px 0; 
+            position: relative;
+            max-width: 100%;
+            margin-top: 25px;
+            border: 1px solid var(--muted);
+            border-radius: 10px;
+        }
+
+        .story-grid {
+            display: flex;
+            white-space: nowrap; 
+            animation: scroll-left 20s linear infinite; 
+        }
+
+        /* Pause animation on hover */
+        .story-carousel-wrapper:hover .story-grid {
+            animation-play-state: paused;
+        }
+
+        .story-image-container {
+            flex: 0 0 auto; 
+            width: 350px; 
+            margin-right: 20px; 
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
+            background-color: var(--dark-background);
+            display: inline-block; 
+        }
+
+        .story-image-container img {
+            width: 100%;
+            height: auto; 
+            display: block;
+        }
+
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } 
+        }
+
+        /* --- HEADER NAVIGATION STYLES --- */
+        .menu-icon-btn {
+            background: none;
+            border: none;
+            color: var(--primary-green); /* Green icon */
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 10px; 
+        }
+
+        /* Mobile Menu (Off-canvas) */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            right: -280px; /* Hidden off-screen */
+            width: 280px;
+            height: 100%; /* Ensures it fills viewport height */
+            background-color: var(--dark-background); 
+            box-shadow: -4px 0 10px rgba(0,0,0,0.5);
+            transition: right 0.3s ease;
+            z-index: 1001;
+            padding-top: 60px;
+            box-sizing: border-box;
+            /* Implementation for up-down slide: Enable vertical scrolling for options */
+            overflow-y: auto; 
+        }
+        .mobile-menu-overlay.active {
+            right: 0;
+        }
+        .mobile-menu-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .mobile-menu-list a {
+            display: block;
+            /* >>> IMPLEMENTATION 2: Decreased padding for smaller options */
+            padding: 12px 20px; 
+            text-decoration: none;
+            color: var(--white);
+            font-weight: 600;
+            /* >>> IMPLEMENTATION 2: Decreased font size for smaller options */
+            font-size: 0.95rem; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* >>> IMPLEMENTATION 3: Highlight linked item when mouse pointer goes over (for mobile menu) */
+        .mobile-menu-list a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        /* --- 3D QUERY BUTTON STYLES (now attached directly to form) --- */
+        .query-cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Reduced gap to fit within the form's max-width */
+            margin-top: 5px; /* MODIFICATION: Reduced margin for closer spacing */
+            padding-top: 0px; /* MODIFICATION: Removed padding and border-top line */
+            /* border-top: 1px solid var(--muted); <- REMOVED */
+            flex-wrap: wrap; 
+        }
+        /* Style for the title above the buttons inside the form */
+        .query-form .section-title {
+            margin-bottom: 5px; /* MODIFICATION: Reduced margin for closer spacing */
+            padding-bottom: 0px; /* MODIFICATION: Removed padding and border-bottom line */
+            /* border-bottom: 1px solid var(--primary-green); <- REMOVED */
+        }
+        .cta-3d {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px; /* Reduced padding for smaller buttons */
+            border-radius: 8px; /* Reduced radius */
+            font-size: 0.95rem; /* Adjusted to match form text size */
+            font-weight: 700;
+            text-decoration: none; /* Removed underline */
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative;
+            color: var(--white);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            /* Adjusted shadow for smaller buttons */
+            box-shadow: 0 6px 0 0 var(--shadow-color), 0 8px 12px rgba(0,0,0,0.4);
+            transform: translateY(0);
+        }
+        .cta-3d i {
+            margin-right: 8px;
+        }
+        .email-cta {
+            --main-color: #D9534F; 
+            --shadow-color: #B53F3B;
+            background-color: var(--main-color);
+        }
+        .whatsapp-cta {
+            --main-color: #25D366; 
+            --shadow-color: #1FAF51;
+            background-color: var(--main-color);
+        }
+        .cta-3d:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 0 0 var(--shadow-color), 0 9px 15px rgba(0,0,0,0.5);
+        }
+        .cta-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 0 var(--shadow-color), 0 3px 5px rgba(0,0,0,0.3);
+        }
+
+        /* --- New Contact Box Styles --- */
+        .contact-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 25px;
+            margin-top: 30px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0fff0, #e6ffe6); /* Light green gradient background */
+            border: 1px solid var(--primary-green);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.2);
+            text-align: center;
+        }
+        .contact-item {
+            flex-basis: 200px; /* Smallest size for items */
+            padding: 15px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+        }
+        .contact-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(40, 167, 69, 0.2);
+        }
+        .contact-item i {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+        .contact-item h4 {
+            margin: 5px 0 8px 0;
+            color: var(--dark-text);
+            font-size: 1.1rem;
+        }
+        .contact-item a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .contact-item a:hover {
+            color: var(--primary-green);
+        }
+        .contact-address {
+            flex-basis: 100%;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--primary-green);
+        }
+        .contact-address iframe {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (min-width: 769px) {
+            /* Keep desktop menu icon visible */
+            .header-nav .menu-icon-btn {
+                display: block; 
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Header adjustments for mobile */
+            header {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+            .header-logo {
+                max-height: 59.5px; /* 70px - 15% = 59.5px for mobile screens */
+            }
+            .header-nav {
+                /* Hide main nav links on mobile, only show controls (login/menu icon) */
+                gap: 10px;
+                flex-wrap: nowrap;
+            }
+
+            /* Query buttons stacking */
+            .query-cta-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .cta-3d {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Contact box stacking */
+            .contact-item {
+                flex-basis: 100%;
+            }
+            .contact-box {
+                padding: 20px;
+                gap: 15px;
+            }
+            /* Device Image Mobile Adjustment */
+            .device-image {
+                max-width: 100%;
+                max-height: 200px;
+            }
+
+            /* General mobile adjustments (unchanged) */
+            .container {
+                padding: 1.5rem 1rem;
+                margin: 1.5rem auto;
+            }
+            .section-title {
+                font-size: 1.4rem;
+                margin-bottom: 1.5rem;
+            }
+            .service-list ul, .feature-list ul, .device-details-container ul {
+                grid-template-columns: 1fr; 
+            }
+            .hero-cta-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .app-links {
+                flex-direction: column; 
+            }
+            .mileage-calculator > div:nth-child(2) {
+                 flex-direction: column;
+            }
+            .mileage-calculator input, .mileage-calculator select {
+                width: 100%;
+                box-sizing: border-box;
+            }
+            .query-form input[type="text"], .query-form input[type="email"], .query-form input[type="tel"], .query-form select, .query-form textarea {
+                 width: 100%;
+                 box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="top">
+        <a href="javascript:void(0)" onclick="scrollToTop()"><img src="RoutEye Logo.png" alt="RoutEye Logo" class="header-logo"></a>
+        <nav class="header-nav" id="desktop-nav">
+            <a href="javascript:void(0)" onclick="scrollToTop()">Home</a>
+            <a href="#services">Our Services</a>
+            <a href="#contact">Contact Us</a>
+            <a href="#about">About Us</a>
+            
+            <a href="https://routeye.net/" class="login-link" target="_blank" rel="noopener noreferrer">Login</a>
+            
+            <button class="menu-icon-btn" onclick="toggleMenu()" aria-label="Toggle Menu"><i class="fas fa-bars"></i></button>
+        </nav>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenu" onmouseleave="hideMenu()">
+        <button class="close-btn" onclick="toggleMenu()"><i class="fas fa-times"></i></button>
+        <ul class="mobile-menu-list">
+            <li><a https://routeye.net/" onclick="toggleMenu()">Login</a></li>
+            <li><a href="javascript:void(0)" onclick="scrollToTop(); toggleMenu();">Home</a></li>
+            <li><a href="#story" onclick="toggleMenu()">Vehicle Story</a></li>
+            <li><a href="#services" onclick="toggleMenu()">Our Services</a></li>
+            <li><a href="#features" onclick="toggleMenu()">App/Web Features</a></li>
+            <li><a href="#devices" onclick="toggleMenu()">Devices</a></li>
+            <li><a href="#app-download" onclick="toggleMenu()">Download App</a></li>
+            <li><a href="#mileage-calculator" onclick="toggleMenu()">Mileage Calculator</a></li>
+            <li><a href="#query" onclick="toggleMenu()">Submit Query</a></li>
+            <li><a href="#contact" onclick="toggleMenu()">Contact Us</a></li>
+            <li><a href="#about" onclick="toggleMenu()">About Us</a></li>
+        </ul>
+    </div>
+
+    <div class="container" id="home">
+        <h2 class="section-title">Welcome to RoutEye</h2>
+        <p>RoutEye offers state-of-the-art GPS tracking solutions designed to meet a wide range of needs. Whether you're looking to secure your personal vehicle, efficiently manage a fleet, or track valuable assets, our advanced technology provides real-time insights and peace of mind. Explore our comprehensive suite of services and cutting-edge features to discover how RoutEye can empower you with superior tracking capabilities.</p>
+        
+        <div class="video-container">
+            <video autoplay loop muted preload="metadata" title="Moving vehicles">
+                <source src="moving vehicles.mp4" type="video/mp4">
+                Your browser does not support the video tag. Please check the path and file format.
+            </video>
+        </div>
+
+        <div class="hero-cta-buttons">
+            <a href="#query" class="cta-button primary-cta">Submit Your Query Via</a>
+            <a href="#app-download" class="cta-button secondary-cta">Download App Now</a>
+        </div>
+    </div>
+
+    <div class="container" id="story">
+        <h2 class="section-title">The RoutEye Story: Peace of Mind for Your Vehicle</h2>
+        <div class="story-carousel-wrapper">
+            <div class="story-grid">
+                <div class="story-image-container">
+                    <img src="Sc1.jpeg" alt="Man panicking over his stolen vehicle: 'Oh no! My vehicle is gone! What am I going to do?'">
+                </div>
+                <div class="story-image-container">
+                    <img src="sc2.jpeg" alt="Friend approaching the troubled man: 'Hey, you look troubled. What's wrong?'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc3.jpeg" alt="Troubled man explaining: 'My car, it's been stolen! I don't know what to do.'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc4.jpeg" alt="Friend suggesting the solution: 'You need RoutEye GPS services! I use it to keep my vehicle safe.'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc5.jpeg" alt="Both men smiling, looking at the RoutEye app: 'RoutEye gives me peace of mind! You can easily track everything right here.'">
+                </div>
+                
+                <div class="story-image-container">
+                    <img src="Sc1.jpeg" alt="Man panicking over his stolen vehicle: 'Oh no! My vehicle is gone! What am I going to do?'">
+                </div>
+                <div class="story-image-container">
+                    <img src="sc2.jpeg" alt="Friend approaching the troubled man: 'Hey, you look troubled. What's wrong?'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc3.jpeg" alt="Troubled man explaining: 'My car, it's been stolen! I don't know what to do.'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc4.jpeg" alt="Friend suggesting the solution: 'You need RoutEye GPS services! I use it to keep my vehicle safe.'">
+                </div>
+                <div class="story-image-container">
+                    <img src="Sc5.jpeg" alt="Both men smiling, looking at the RoutEye app: 'RoutEye gives me peace of mind! You can easily track everything right here.'">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="services">
+        <h2 class="section-title">Our Services</h2>
+        <div class="service-list">
+            <ul id="services-list"></ul>
+        </div>
+    </div>
+
+    <div class="container" id="features">
+        <h2 class="section-title">App/Web Features</h2>
+        <div class="feature-list">
+            <ul id="features-list"></ul>
+        </div>
+    </div>
+
+    <div class="container" id="devices">
+        <h2 class="section-title">Our Devices</h2>
+        <div class="device-selector-wrapper">
+            <div class="custom-select">
+                <label for="device-selector" style="display:none;">Select a Device</label>
+                <select id="device-selector" onchange="showDeviceDetails()" aria-label="Select a device to view details">
+                    <option value="none">Select a device — view details</option>
+                    <option value="concox-v5">Concox V5</option>
+                    <option value="g-17">G-17</option>
+                    <option value="concox-gt-800">Concox GT-800</option>
+                    <option value="ais140-tracker">AIS140 Compliant GPS Tracker</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="device-details-container">
+            <div id="concox-v5" class="device-item">
+                <h3>Concox V5</h3>
+                <div class="device-image-wrapper">
+                    <img src="concox v5.png" alt="Image of Concox V5 GPS Tracker" class="device-image">
+                </div>
+                <ul>
+                    <li><i class="fas fa-microchip list-icon"></i> Compact and easy-to-install vehicle tracker.</li>
+                    <li><i class="fas fa-bolt list-icon"></i> Wide voltage range (9V to 90V) compatible with various vehicle types.</li>
+                    <li><i class="fas fa-map-marker-alt list-icon"></i> Real-time location tracking via GPS, LBS & Beidou.</li>
+                    <li><i class="fas fa-hands-helping list-icon"></i> SOS emergency alerts.</li>
+                    <li><i class="fas fa-lock list-icon"></i> Remote power/fuel cut-off.</li>
+                    <li><i class="fas fa-draw-polygon list-icon"></i> Geofencing.</li>
+                    <li><i class="fas fa-history list-icon"></i> Historical data recording.</li>
+                    <li><i class="fas fa-car list-icon"></i> ACC detection - ignition status.</li>
+                    <li><i class="fas fa-tachometer-alt list-icon"></i> Driving Behavior Analysis (harsh acceleration/braking, over-speeding, harsh cornering).</li>
+                    <li><i class="fas fa-water list-icon"></i> IP54 dust and water resistance.</li>
+                    <li><i class="fas fa-battery-full list-icon"></i> Built-in 60mAh / 3.7 V Li-Polymer battery for backup.</li>
+                    <li><i class="fas fa-shield-alt list-icon"></i> Anti-theft calling alert in case of device tampering/disconnection or main battery pull.</li>
+                </ul>
+            </div>
+
+            <div id="g-17" class="device-item">
+                <h3>G-17</h3>
+                <div class="device-image-wrapper">
+                    <img src="g-17.png" alt="Image of G-17 GPS Tracker" class="device-image">
+                </div>
+                <ul>
+                    <li><i class="fas fa-map-marked-alt list-icon"></i> Real-Time Tracking: Provides real-time location updates via smartphone or computer.</li>
+                    <li><i class="fas fa-border-all list-icon"></i> Geofencing: Set virtual boundaries and receive alerts when the tracker enters or exits predefined areas.</li>
+                    <li><i class="fas fa-phone-alt list-icon"></i> SOS Emergency Button: Allows sending an emergency signal to predefined contacts.</li>
+                    <li><i class="fas fa-cube list-icon"></i> Compact and Portable: Small, lightweight, and easy to install or carry.</li>
+                    <li><i class="fas fa-mobile-alt list-icon"></i> Mobile App Integration: Compatible with iOS and Android apps for remote monitoring and management.</li>
+                    <li><i class="fas fa-route list-icon"></i> Tracking History: Stores historical location data to view past routes.</li>
+                    <li><i class="fas fa-charging-station list-icon"></i> Battery Life: Rechargeable battery with life varying based on usage.</li>
+                    <li><i class="fas fa-bell list-icon"></i> Real-Time Alerts: Sends notifications for low battery, motion detection, or geofence breaches.</li>
+                    <li><i class="fas fa-car-side list-icon"></i> Wide Compatibility: Suitable for tracking vehicles, people, pets, or assets.</li>
+                </ul>
+            </div>
+
+            <div id="concox-gt-800" class="device-item">
+                <h3>Concox GT-800</h3>
+                <div class="device-image-wrapper">
+                    <img src="concox-gt-800.png" alt="Image of Concox GT-800 GPS Tracker" class="device-image">
+                </div>
+                <ul>
+                    <li><i class="fas fa-star list-icon"></i> High-end multifunctional vehicle GPS/AGPS tracker.</li>
+                    <li><i class="fas fa-water list-icon"></i> IP66 dust and waterproof casing.</li>
+                    <li><i class="fas fa-draw-polygon list-icon"></i> Geo-fencing capability.</li>
+                    <li><i class="fas fa-power-off list-icon"></i> Multiple analog & digital I/O.</li>
+                    <li><i class="fas fa-door-open list-icon"></i> Door status detection.</li>
+                    <li><i class="fas fa-comments list-icon"></i> Two-way communication.</li>
+                    <li><i class="fas fa-hands-helping list-icon"></i> SOS call functionality.</li>
+                    <li><i class="fas fa-hdd list-icon"></i> 64Mb memory.</li>
+                    <li><i class="fas fa-battery-half list-icon"></i> 1200mAh/3.7V battery.</li>
+                    <li><i class="fas fa-satellite list-icon"></i> GPS chipset: MTK high sensitivity chip.</li>
+                    <li><i class="fas fa-signal list-icon"></i> Operates on Quad-band GSM 2G networks (850/900/1800/1900 MHz).</li>
+                    <li><i class="fas fa-cogs list-icon"></i> Can be controlled over GPRS and supports SMS commands for remote configuration.</li>
+                </ul>
+            </div>
+
+            <div id="ais140-tracker" class="device-item">
+                <h3>AIS140 Compliant GPS Tracker</h3>
+                <div class="device-image-wrapper">
+                    <img src="ais140-tracker.png" alt="Image of AIS140 Compliant GPS Tracker" class="device-image">
+                </div>
+                <ul>
+                    <li><i class="fas fa-file-invoice list-icon"></i> AIS 140 compliance, ensuring government-approved reliability for commercial vehicles in India.</li>
+                    <li><i class="fas fa-map-marker-alt list-icon"></i> Real-time tracking with accurate location updates.</li>
+                    <li><i class="fas fa-exclamation-triangle list-icon"></i> Emergency Alert System with a panic/SOS button for swift response in emergencies.</li>
+                    <li><i class="fas fa-draw-polygon list-icon"></i> Geofencing capabilities with entry/exit alerts.</li>
+                    <li><i class="fas fa-database list-icon"></i> Data Logging: Stores data even out of network coverage.</li>
+                    <li><i class="fas fa-lock list-icon"></i> Remote Immobilization: Control vehicle ignition remotely for security.</li>
+                    <li><i class="fas fa-road list-icon"></i> Driver Behavior Monitoring: Analyzes patterns like speeding, harsh braking, rapid acceleration.</li>
+                    <li><i class="fas fa-hard-hat list-icon"></i> Sturdy Build: Designed to withstand harsh conditions, often with IP65 or IP68 certification for dust and water resistance.</li>
+                    <li><i class="fas fa-gas-pump list-icon"></i> Supports fuel monitoring system to track consumption and prevent theft.</li>
+                    <li><i class="fas fa-car-crash list-icon"></i> Accident Call Alert: Provides call alerts to registered contacts in case of an accident.</li>
+                    <li><i class="fas fa-bolt list-icon"></i> Wide DC voltage range (10V–100V) for high compatibility.</li>
+                    <li><i class="fas fa-mobile-alt list-icon"></i> Dedicated Mobile App for iOS & Android.</li>
+                    <li><i class="fas fa-battery-full list-icon"></i> Built-in battery for backup power.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container app-download-section" id="app-download">
+        <h2 class="section-title">Download Our Mobile App</h2>
+        <p>Manage your vehicles on the go with our dedicated mobile app. Available on Android.</p>
+        
+        <div class="app-links">
+            <img src="RoutEye Logo.png" alt="RoutEye App Icon" style="width:96px;height:96px;"> 
+            
+            <a href="https://play.google.com/store/apps/details?id=com.routeye.prod" target="_blank" rel="noopener noreferrer">
+                <img src="QR App.png" alt="Get it on Google Play" style="height:60px;">
+            </a>
+            
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://play.google.com/store/apps/details?id=com.routeye.prod" alt="Google Play QR Code" style="width:120px;height:120px;">
+        </div>
+    </div>
+
+    <div class="container" id="mileage-calculator">
+        <h2 class="section-title">Mileage Calculator</h2>
+        <div class="mileage-calculator">
+            <div style="display:flex;gap:8px;align-items:center;justify-content:center;margin-bottom:12px;">
+                <label for="calculation-type" style="margin-right:8px;font-weight:600;">Calculate:</label>
+                <select id="calculation-type" onchange="updateCalculatorInputs()">
+                    <option value="mileage">Mileage (Km/L)</option>
+                    <option value="distance">Distance (Km)</option>
+                    <option value="fuel">Fuel (Liters)</option>
+                </select>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;">
+                <input type="number" id="calc-input-1" placeholder="Enter distance (Km)" style="width:220px;padding:10px;border-radius:8px;border:1px solid var(--muted);"/>
+                <input type="number" id="calc-input-2" placeholder="Enter fuel (L)" style="width:220px;padding:10px;border-radius:8px;border:1px solid var(--muted);"/>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
+                <button type="button" onclick="calcSmart()" style="padding:10px 18px;border-radius:8px;background:var(--primary-green);color:var(--white);font-weight:700;border:none;">Calculate</button>
+                <button type="button" onclick="clearCalc()" style="padding:10px 18px;border-radius:8px;background:transparent;color:var(--dark-text);border:1px solid var(--muted);">Clear</button>
+            </div>
+            <div id="result" class="mileage-result" style="display:none;margin-top:12px;padding:12px;border-radius:8px;font-weight:700;color:var(--white);"></div>
+        </div>
+    </div>
+
+    <div class="container" id="query">
+        <h2 class="section-title">Generate Your Query</h2>
+        <form class="query-form" id="queryForm">
+            <p>Please fill out the form below, and select your preferred communication method.</p>
+
+            <label for="query_type">I am a:</label>
+            <select id="query_type" name="Query Type" required>
+                <option value="">-- Please select --</option>
+                <option value="End User">End User</option>
+                <option value="Prospective Dealer">Prospective Dealer</option>
+            </select>
+
+            <label for="name">Your Name:</label>
+            <input type="text" id="name" name="Name" required autocomplete="name">
+
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="Email" required autocomplete="email">
+
+            <label for="phone">Your Phone Number:</label>
+            <input type="tel" id="phone" name="Phone Number" pattern="[0-9]{10}" placeholder="e.g., 9876543210" required autocomplete="tel">
+
+            <label for="state">State / Union Territory:</label>
+            <select id="state" name="State" required>
+                <option value="">-- Select State / UT --</option>
+            </select>
+
+            <label for="district">District:</label>
+            <select id="district" name="District" required disabled>
+                <option value="">-- Select State First --</option>
+            </select>
+
+            <label for="area">Area:</label>
+            <input type="text" id="area" name="Area" placeholder="Enter your area (e.g., street, locality)" required>
+            <p class="form-note">If your specific area isn't listed (as this is a free-text field), please enter it.</p>
+
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="Pincode" pattern="[0-9]{6}" placeholder="e.g., 123456" required>
+            <p class="form-note">Please enter a 6-digit pincode.</p>
+
+            <label for="query_message">Your Query/Message:</label>
+            <textarea id="query_message" name="Query Message" rows="5" required placeholder="Describe your query or interest here..."></textarea>
+
+            <h2 class="section-title">Submit Your Query Via</h2>
+            <div class="query-cta-buttons">
+                <a href="javascript:void(0);" onclick="handleSubmission('email')" class="cta-3d email-cta">
+                    <i class="fas fa-envelope"></i> Via Email
+                </a>
+                <a href="javascript:void(0);" onclick="handleSubmission('whatsapp')" class="cta-3d whatsapp-cta">
+                    <i class="fab fa-whatsapp"></i> Via WhatsApp
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="container" id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <p style="text-align:center; margin-bottom: 25px;">We are here to help you secure and manage your assets. Reach out to our dedicated team!</p>
+        
+        <div class="contact-box">
+            
+            <div class="contact-item">
+                <i class="fas fa-phone-alt"></i>
+                <h4>Mobile Support</h4>
+                <a href="tel:+918818869279" rel="noopener noreferrer">+91 8818869279</a>
+                <p style="font-size:0.85rem; margin-top:5px; color:#666;">(Available Mon - Sat)</p>
+            </div>
+            
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <h4>Sales & General Query</h4>
+                <a href="mailto:routeyes@gmail.com" rel="noopener noreferrer">routeyes@gmail.com</a>
+            </div>
+            
+            <div class="contact-item">
+                <i class="fas fa-headset"></i>
+                <h4>Technical Support</h4>
+                <a href="mailto:routeyes@gmail.com" rel="noopener noreferrer">routeyes@gmail.com</a>
+            </div>
+
+            <div class="contact-address">
+                <h4>Our Headquarters (Registered Address)</h4>
+                <p><strong>RoutEye </strong><br>New Delhi, India</p>
+                <p style="font-size:0.85rem; color:#666;">(Please contact us before visiting)</p>
+                
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115160.27896472658!2d85.04419747194689!3d25.60803525281488!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f29931b255ccf7%3A0xf62e5b72e5051a89!2sPatna%2C%20Bihar!5e0!3m2!1sen!2sin!4v1709292813134!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Google Map of Patna, Bihar"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="about">
+        <h2 class="section-title">About Us</h2>
+        <div class="about-content">
+            <p>RoutEye is a dedicated GPS tracking service provider committed to delivering innovative and dependable tracking solutions across India. Based in **Patna, Bihar**, we strive to empower our customers with the tools they need to effectively monitor and manage their valuable assets. Our expertise lies in providing seamless real-time tracking, robust alert systems, and user-friendly platforms accessible via both web and mobile applications.</p>
+            <p>We are proud to be **RoutEye.** Our success is built on the trust and positive feedback of our users and partners who believe in our commitment to quality, reliability, and exceptional service. We continuously evolve to meet your needs, driven by the strong relationships we foster within our community.</p>
+            <div style="text-align:center;margin-top:18px;"><img src="RoutEye Logo.png" alt="RoutEye Logo" style="max-height:138px;"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 RoutEye. All rights reserved.</p>
+    </footer>
+
+    <a href="javascript:void(0)" class="back-to-top" id="backToTopBtn" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></a>
+
+    <script>
+        // JS Data for populating lists (unchanged)
+        const statesData = {
+            "Andaman and Nicobar Islands": { districts: ["Nicobar","North and Middle Andaman","South Andaman"] },
+            "Andhra Pradesh": { districts: ["Anantapur","Chittoor","East Godavari","Guntur","Krishna","Kurnool","Nellore","Prakasam","Srikakulam","Visakhapatnam","Vizianagaram","West Godavari","YSR Kadapa"] },
+            "Arunachal Pradesh": { districts: ["Anjaw","Changlang","Dibang Valley","East Kameng","East Siang","Kra Daadi","Kurung Kumey","Lohit","Longding","Lower Dibang Valley","Lower Siang","Lower Subansiri","Namsai","Pakke-Kessang","Papum Pare","Siang","Tawang","Tirap","Upper Siang","Upper Subansiri","West Kameng","West Siang"] },
+            "Assam": { districts: ["Baksa","Barpeta","Biswanath","Bongaigaigaon","Cachar","Charaideo","Chirang","Darrang","Dhemaji","Dhubri","Dibrugarh","Dima Hasao","Goalpara","Golaghat","Hailakhandi","Hojai","Jorhat","Kamrup","Kamrup Metropolitan","Karbi Anglong","Karimganj","Kokrajhar","Lakhimpur","Majuli","Morigaon","Nagaon","Nalbari","Sivasagar","Sonitpur","South Salmara-Mankachar","Tinsukia","Udalguri","West Karbi Anglong"] },
+            "Bihar": { districts: ["Araria","Arwal","Aurangabad","Banka","Begusarai","Bhagalpur","Bhojpur","Buxar","Darbhanga","East Champaran","Gaya","Gopalganj","Jamui","Jehanabad","Kaimur (Bhabua)","Katihar","Khagaria","Kishanganj","Lakhisarai","Madhepura","Madhubani","Munger","Muzaffarpur","Nalanda","Nawada","Patna","Purnia","Rohtas","Saharsa","Samastipur","Saran","Sheikhpura","Sheohar","Sitamarhi","Siwan","Supaul","Vaishali","West Champaran"] },
+            "Chandigarh": { districts: ["Chandigarh"] },
+            "Chhattisgarh": { districts: ["Balod","Baloda Bazar","Balrampur-Ramanujganj","Bastar","Bemetara","Bijapur","Bilaspur","Dantewara","Dhamtari","Durg","Gariaband","Janjgir-Champa","Jashpur","Kanker","Kawardha","Kondagaon","Korba","Koriya","Mahasamund","Mandla","Mungeli","Narayanpur","Raigarh","Raipur","Rajnandgaon","Sukma","Surajpur","Surguja"] },
+            "Dadra and Nagar Haveli and Daman and Diu": { districts: ["Dadra & Nagar Haveli","Daman","Diu"] },
+            "Delhi": { districts: ["Central Delhi","East Delhi","New Delhi","North Delhi","North East Delhi","North West Delhi","Shahdara","South Delhi","South East Delhi","South West Delhi","West Delhi"] },
+            "Goa": { districts: ["North Goa","South Goa"] },
+            "Gujarat": { districts: ["Ahmedabad","Amreli","Anand","Aravalli","Banaskantha","Bharuch","Bhavnagar","Botad","Chhota Udaipur","Dahod","Dang","Devbhoomi Dwarka","Gandhinagar","Gir Somnath","Jamnagar","Junagadh","Kheda","Kutch","Mahisagar","Mehsana","Morbi","Narmada","Navsari","Panchmahal","Patan","Porbandar","Rajkot","Sabarkantha","Surat","Surendranagar","Tapi","Vadodara","Valsad"] },
+            "Haryana": { districts: ["Ambala","Bhiwani","Charkhi Dadri","Faridabad","Fatehabad","Gurugram","Hisar","Jhajjar","Jind","Kaithal","Karnal","Kurukshetra","Mahendragarh","Nuh","Palwal","Panchkula","Panipat","Rewari","Rohtak","Sirsa","Sonipat","Yamunanagar"] },
+            "Himachal Pradesh": { districts: ["Bilaspur","Chamba","Hamirpur","Kangra","Kinnaur","Kullu","Lahaul and Spiti","Mandi","Shimla","Sirmaur","Solan","Una"] },
+            "Jammu and Kashmir": { districts: ["Anantnag","Bandipora","Baramulla","Budgam","Doda","Ganderbal","Jammu","Kathua","Kishtwar","Kulgam","Kupwara","Poonch","Pulwama","Rajouri","Ramban","Reasi","Samba","Shopian","Srinagar","Udhampur"] },
+            "Jharkhand": { districts: ["Bokaro","Chatra","Deoghar","Dhanbad","Dumka","East Singhbhum","Garhwa","Giridih","Godda","Gumla","Hazaribagh","Jamtara","Khunti","Koderma","Latehar","Lohardaga","Pakur","Palamu","Ramgarh","Ranchi","Sahibganj","Seraikela-Kharsawan","Simdega","West Singhbhum"] },
+            "Karnataka": { districts: ["Bagalkot","Ballari","Belagavi","Bengaluru Rural","Bengaluru Urban","Bidar","Chamarajanagar","Chikkaballapur","Chikkamagaluru","Chitradurga","Dakshina Kannada","Davangere","Dharwad","Gadag","Kalaburigi","Hassan","Haveri","Kodagu","Kolar","Koppal","Mandya","Mysuru","Raichur","Ramanagara","Shivamogga","Tumakuru","Udupi","Uttara Kannada","Vijayapura","Yadgir"] },
+            "Kerala": { districts: ["Alappuzha","Ernakulam","Idukki","Kannur","Kasaragod","Kollam","Kottayam","Kozhikode","Malappuram","Palakkad","Pathanamthitta","Thiruvananthapuram","Thrissur","Wayanad"] },
+            "Ladakh": { districts: ["Kargil","Leh"] },
+            "Lakshadweep": { districts: ["Lakshadweep"] },
+            "Madhya Pradesh": { districts: ["Agar Malwa","Alirajpur","Anuppur","Ashoknagar","Balaghat","Barwani","Betul","Bhind","Bhopal","Burhanpur","Chhatarpur","Chhindwara","Damoh","Datia","Dewas","Dhar","Dindori","Guna","Gwalior","Harda","Hoshangabad","Indore","Jabalpur","Jhabua","Katni","Khargone","Mandla","Mandsaur","Morena","Narsinghpur","Neemuch","Niwari","Panna","Raisen","Rajgarh","Ratlam","Rewa","Sagar","Satna","Sehore","Seoni","Shahdol","Shajapur","Sheopur","Shivpuri","Sidhi","Singrauli","Tikamgarh","Ujjain","Umaria","Vidisha"] },
+            "Maharashtra": { districts: ["Ahmednagar","Akola","Amravati","Aurangabad","Beed","Bhandara","Buldhana","Chandrapur","Dhule","Gadchiroli","Gondia","Hingoli","Jalgaon","Jalna","Kolhapur","Latur","Mumbai City","Mumbai Suburban","Nagpur","Nanded","Nandurbar","Nashik","Osmanabad","Palghar","Parbhani","Pune","Raigad","Ratnagiri","Sangli","Satara","Sindhudurg","Solapur","Thane","Wardha","Washim","Yavatmal"] },
+            "Manipur": { districts: ["Bishnupur","Chandel","Churachandpur","Imphal East","Imphal West","Jiribam","Kakching","Kamjong","Kangpokpi","Noney","Pherzawl","Senapati","Tamenglong","Tengnoupal","Thoubal","Ukhrul"] },
+            "Meghalaya": { districts: ["East Garo Hills","East Jaintia Hills","East Khasi Hills","North Garo Hills","Ri-Bhoi","South Garo Hills","South West Garo Hills","South West Khasi Hills","West Garo Hills","West Jaintia Hills","West Khasi Hills"] },
+            "Mizoram": { districts: ["Aizawl","Champhai","Hnahthial","Khawzawl","Kolasib","Lawngtlai","Lunglei","Mamit","Saiha","Serchhip","Saitual"] },
+            "Nagaland": { districts: ["Chumukedima","Dimapur","Kiphire","Kohima","Longleng","Mokokchung","Mon","Niuland","Noklak","Peren","Phek","Shamator","Tuensang","Wokha","Zunheboto"] },
+            "Odisha": { districts: ["Angul","Balangir","Balasore","Bargarh","Bhadrak","Boudh","Cuttack","Debagarh","Dhenkanal","Gajapati","Ganjam","Jagatsinghpur","Jajpur","Jharsuguda","Kalahandi","Kandhamal","Kendrapara","Kendujhar","Khordha","Koraput","Malkangiri","Mayurbhanj","Nabarangpur","Nayagarh","Nuapada","Puri","Rayagada","Sambalpur","Subarnapur","Sundargarh"] },
+            "Puducherry": { districts: ["Karaikal","Mahe","Puducherry","Yanam"] },
+            "Punjab": { districts: ["Amritsar","Barnala","Bathinda","Faridkot","Fatehgarh Sahib","Fazilka","Ferozepur","Gurdaspur","Hoshiarpur","Jalandhar","Kapurthala","Ludhiana","Mansa","Moga","Muktsar","Pathankot","Patiala","Rupnagar","Sangrur","SAS Nagar (Mohali)","Shaheed Bhagat Singh Nagar","Sri Muktsar Sahib","Tarn Taran"] },
+            "Rajasthan": { districts: ["Ajmer","Alwar","Balotra","Banswara","Baran","Barmer","Beawar","Bharatpur","Bhilwara","Bikaner","Bundi","Chittorgarh","Churu","Dausa","Deeg","Dholpur","Didwana Kachaman","Dungarpur","Ganganagar","Gangapur City","Hanumangarh","Jaipur","Jaipur Rural","Jaisalmer","Jalore","Jhalawar","Jhunjhunu","Jodhpur","Jodhpur Rural","Karauli","Kotputli Behror","Kota","Kekri","Khairthal Tijara","Nagaur","Pali","Phalodi","Pratapgarh","Rajsamand","Salumbar","Sanchore","Sawai Madhopur","Shahpura","Sikar","Sirohi","Tonk","Udaipur"] },
+            "Sikkim": { districts: ["Gangtok","Gyalshing","Mangan","Namchi","Pakyong","Soreng"] },
+            "Tamil Nadu": { districts: ["Ariyalur","Chengalpattu","Chennai","Coimbatore","Cuddalore","Dharmapuri","Dindigul","Erode","Kallakurichi","Kancheepuram","Kanniyakumari","Karur","Krishnagiri","Madurai","Mayiladuthurai","Nagapattinam","Namakkal","Nilgiris","Perambalur","Pudukkottai","Ramanathapuram","Ranipet","Salem","Sivaganga","Tenkasi","Thanjavur","Theni","Thoothukudi","Tiruchirappalli","Tirunelveli","Tirupattur","Tiruppur","Tiruvallur","Tiruvannamalai","Tiruvarur","Vellore","Viluppuram","Virudhunagar"] },
+            "Telangana": { districts: ["Adilabad","Bhadradri Kothagudem","Hanumakonda","Hyderabad","Jagtial","Jangaon","Jayashankar Bhupalpally","Jogulamba Gadwal","Kamareddy","Karimnagar","Khammam","Komaram Bheem","Mahabubabad","Mahabubnagar","Mancherial","Medak","Medchal–Malkajgiri","Mulugu","Nagarkurnool","Nalgonda","Narayanpet","Nirmal","Nizamabad","Peddapalli","Rajanna Sircilla","Rangareddy","Sangareddy","Siddipet","Suryapet","Vikarabad","Wanaparthy","Warangal","Yadadri Bhuvanagiri"] },
+            "Tripura": { districts: ["Dhalai","Gomati","Khowai","North Tripura","Sepahijala","South Tripura","Unakoti","West Tripura"] },
+            "Uttar Pradesh": { districts: ["Agra","Aligarh","Ambedkar Nagar","Amethi","Amroha","Auraiya","Ayodhya","Azamgarh","Baghpat","Bahraich","Ballia","Balrampur","Banda","Bara Banki","Bareilly","Basti","Bhadohi","Bijnor","Budaun","Bulandshahr","Chandauli","Chitrakoot","Deoria","Etah","Etawah","Farrukhabad","Fatehpur","Firozabad","Gautam Buddha Nagar","Ghaziabad","Ghazipur","Gonda","Gorakhpur","Hamirpur","Hapur","Hardoi","Hathras","Jalaun","Jaunpur","Jhansi","Kannauj","Kanpur Dehat","Kanpur Nagar","Kasganj","Kheri","Kushinagar","Lalitpur","Lucknow","Maharajganj","Mahoba","Mainpuri","Mathura","Mau","Meerut","Mirzapur","Moradabad","Muzaffarnagar","Pilibhit","Pratapgarh","Prayagraj","Rampur","Saharanpur","Sambhal","Sant Kabir Nagar","Shahjahanpur","Shamli","Shravasti","Siddharthnagar","Sitapur","Sonbhadra","Sultanpur","Unnao","Varanasi"] },
+            "Uttarakhand": { districts: ["Almora","Bageshwar","Chamoli","Champawat","Dehradun","Haridwar","Nainital","Pauri Garhwal","Pithoragarh","Rudraprayag","Tehri Garhwal","Udham Singh Nagar","Uttarkashi"] },
+            "West Bengal": { districts: ["Alipurduar","Bankura","Birbhum","Cooch Behar","Dakshin Dinajpur","Darjeeling","Hooghly","Howrah","Jalpaiguri","Jhargram","Kalimpong","Kolkata","Malda","Murshidabad","Nadia","North 24 Parganas","Paschim Bardhaman","Paschim Medinipur","Purba Bardhaman","Purba Medinipur","Purulia","South 24 Parganas","Uttar Dinajpur"] }
+        };
+        const servicesData = [
+            { icon: "fas fa-car", text: "<strong>Vehicle Tracking:</strong> Real-time location monitoring for cars, bikes, and other personal vehicles." },
+            { icon: "fas fa-truck", text: "<strong>Fleet Management:</strong> Optimize your business operations with advanced tracking and reporting for your vehicle fleet." },
+            { icon: "fas fa-box", text: "<strong>Logistics Tracking:</strong> Streamline your supply chain with precise tracking of goods and vehicles." },
+            { icon: "fas fa-bus", text: "<strong>School Bus Tracking:</strong> Enhance the safety and convenience of school transportation with real-time bus location updates." },
+            { icon: "fas fa-pallet", text: "<strong>Asset Tracking:</strong> Keep track of your valuable assets, ensuring their security and efficient management." },
+            { icon: "fas fa-lock", text: "<strong>Theft Recovery:</strong> Increase the chances of recovering stolen vehicles or assets with our reliable tracking technology." },
+            { icon: "fas fa-cogs", text: "<strong>Custom GPS Solutions:</strong> Tailored tracking solutions to meet specific industry or individual requirements." }
+        ];
+
+        const featuresData = [
+            { icon: "fas fa-map-marker-alt", text: "<strong>Real-time Tracking:</strong> Monitor the exact location of your vehicles or assets on a live map." },
+            { icon: "fas fa-draw-polygon", text: "<strong>Geofence Alerts:</strong> Set up virtual boundaries and receive instant notifications when a tracked object enters or exits these zones." },
+            { icon: "fas fa-bell", text: "<strong>Multiple Alerts:</strong> Configure various alerts such as Overspeeding, AC On/Off status, Ignition status, and more." },
+            { icon: "fas fa-volume-up", text: "<strong>Voice Alerts:</strong> Receive voice notifications for critical events." },
+            { icon: "fas fa-lock", text: "<strong>Remote Immobilization:</strong> Remotely lock or unlock your vehicle for enhanced security." },
+            { icon: "fas fa-street-view", text: "<strong>Street View Integration:</strong> Get a visual perspective of the surroundings of your tracked objects." },
+            { icon: "fas fa-chart-line", text: "<strong>Intuitive Dashboard & Detailed Reports:</strong> Access comprehensive data and analytics through an easy-to-use dashboard." },
+            { icon: "fas fa-users-cog", text: "<strong>Sub-login Management:</strong> Create and manage sub-accounts with defined access permissions." },
+            { icon: "fas fa-history", text: "<strong>History Tracking & Playback:</strong> Review the past routes and activities of your tracked objects." },
+            { icon: "fas fa-ticket-alt", text: "<strong>Issue Ticket Raising Facility:</strong> Easily report and manage support requests through the platform." }
+        ];
+
+        // Function to toggle the mobile menu (used by the menu icon button)
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
+        }
+        
+        // >>> IMPLEMENTATION: Auto hide the menu option box after removing the mouse pointer
+        // This function is attached to onmouseleave event on the mobile menu overlay div
+        function hideMenu() {
+            const menu = document.getElementById('mobileMenu');
+            // Only hide if the user is on a desktop screen (where onmouseleave is practical)
+            // On mobile, the user relies on clicking the close button or a link
+            if (window.innerWidth > 768) {
+                 menu.classList.remove('active');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const servicesList = document.getElementById('services-list');
+            servicesData.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="${item.icon} list-icon"></i><div class="list-content">${item.text}</div>`;
+                servicesList.appendChild(li);
+            });
+
+            const featuresList = document.getElementById('features-list');
+            featuresData.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = `<i class="${item.icon} list-icon"></i><div class="list-content">${item.text}</div>`;
+                featuresList.appendChild(li);
+            });
+
+            const stateSelect = document.getElementById('state');
+            const districtSelect = document.getElementById('district');
+
+            function populateStates() {
+                const sortedStates = Object.keys(statesData).sort();
+                stateSelect.innerHTML = '<option value="">-- Select State / UT --</option>';
+                sortedStates.forEach(stateName => {
+                    const option = document.createElement('option'); option.value = stateName; option.textContent = stateName; stateSelect.appendChild(option);
+                });
+            }
+
+            function populateDistricts() {
+                const selectedState = stateSelect.value;
+                districtSelect.innerHTML = '<option value="">-- Select District --</option>';
+                if (selectedState && statesData[selectedState]) {
+                    const districts = statesData[selectedState].districts;
+                    if (districts && districts.length > 0) {
+                        districts.slice().sort().forEach(district => {
+                            const option = document.createElement('option'); option.value = district; option.textContent = district; districtSelect.appendChild(option);
+                        });
+                        districtSelect.disabled = false;
+                    } else {
+                        districtSelect.disabled = true;
+                        districtSelect.innerHTML = '<option value="">-- No districts found for this state --</option>';
+                    }
+                } else {
+                    districtSelect.disabled = true;
+                    districtSelect.innerHTML = '<option value="">-- Select State First --</option>';
+                }
+            }
+            stateSelect.addEventListener('change', populateDistricts);
+            populateStates();
+            
+            showDeviceDetails();
+        });
+
+        // Function to handle form submission via Email or WhatsApp after validation
+        function handleSubmission(type) {
+            const form = document.getElementById('queryForm');
+            
+            // 1. Validate the form using the browser's built-in check
+            if (!form.reportValidity()) {
+                // Validation failed (browser shows error messages next to invalid fields)
+                return;
+            }
+
+            // 2. Gather form data
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const queryType = document.getElementById('query_type').value;
+            const state = document.getElementById('state').value;
+            const district = document.getElementById('district').value;
+            const area = document.getElementById('area').value;
+            const pincode = document.getElementById('pincode').value;
+            const message = document.getElementById('query_message').value;
+
+            const bodyText = `
+*-- RoutEye Query --*
+Query Type: ${queryType}
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+State: ${state}
+District: ${district}
+Area: ${area}
+Pincode: ${pincode}
+
+Message:
+${message}
+`;
+
+            if (type === 'email') {
+                // Construct mailto link
+                const subject = encodeURIComponent(`Query from ${name} (RoutEye Website)`);
+                const body = encodeURIComponent(bodyText);
+                const mailtoLink = `mailto:routeyes@gmail.com?subject=${subject}&body=${body}`;
+                window.open(mailtoLink, '_self');
+            } else if (type === 'whatsapp') {
+                // Construct WhatsApp link
+                const whatsappText = encodeURIComponent(`Hello TracKro, I have a query about your GPS services. My details are:\n\n${bodyText}`);
+                const whatsappLink = `https://wa.me/918818869279?text=${whatsappText}`;
+                window.open(whatsappLink, '_blank');
+            }
+        }
+
+        // Smooth scroll function for Back to Top icon and Home links
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function updateCalculatorInputs() {
+            const mode = document.getElementById('calculation-type').value;
+            const inp1 = document.getElementById('calc-input-1');
+            const inp2 = document.getElementById('calc-input-2');
+            const resultDiv = document.getElementById('result');
+            if (resultDiv) { resultDiv.style.display = 'none'; resultDiv.textContent = ''; }
+            if (mode === 'mileage') {
+                inp1.placeholder = 'Enter distance (Km)';
+                inp2.placeholder = 'Enter fuel (Liters)';
+            } else if (mode === 'distance') {
+                inp1.placeholder = 'Enter fuel (Liters)';
+                inp2.placeholder = 'Enter mileage (Km/L)';
+            } else if (mode === 'fuel') {
+                inp1.placeholder = 'Enter distance (Km)';
+                inp2.placeholder = 'Enter mileage (Km/L)';
+            }
+        }
+
+        function calcSmart() {
+            const mode = document.getElementById('calculation-type').value;
+            const a = parseFloat(document.getElementById('calc-input-1').value);
+            const b = parseFloat(document.getElementById('calc-input-2').value);
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.style.backgroundColor = 'var(--primary-green)';
+            if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) {
+                resultDiv.textContent = 'Please enter positive numbers in both fields.';
+                return;
+            }
+            if (mode === 'mileage') { 
+                resultDiv.textContent = `Mileage: ${(a / b).toFixed(2)} Km/L`;
+            }
+            else if (mode === 'distance') { 
+                resultDiv.textContent = `Distance: ${(a * b).toFixed(2)} Km`;
+            }
+            else if (mode === 'fuel') { 
+                resultDiv.textContent = `Fuel Consumed: ${(a / b).toFixed(2)} Liters`;
+            }
+            else { 
+                resultDiv.textContent = 'Select calculation mode.';
+            }
+        }
+
+        function clearCalc() { 
+            document.getElementById('calc-input-1').value = '';
+            document.getElementById('calc-input-2').value = ''; 
+            const resultDiv = document.getElementById('result'); 
+            resultDiv.style.display = 'none'; 
+            resultDiv.textContent = '';
+        }
+
+        function showDeviceDetails() { 
+            const selectedDevice = document.getElementById('device-selector').value; 
+            const deviceItems = document.querySelectorAll('.device-details-container .device-item');
+            deviceItems.forEach(item => item.classList.remove('active')); 
+            if (selectedDevice !== 'none') { 
+                const activeDevice = document.getElementById(selectedDevice); 
+                if (activeDevice) activeDevice.classList.add('active');
+            } 
+        }
+
+        window.onscroll = function() { 
+            const backToTopBtn = document.getElementById("backToTopBtn");
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) { 
+                backToTopBtn.style.display = "block"; 
+            } else { 
+                backToTopBtn.style.display = "none"; 
+            } 
+        };
+    </script>
+</body>
+</html>
